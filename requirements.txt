@@ -1,0 +1,12 @@
+transformers
+torch
+torchvision
+opencv-python
+invisible-watermark
+scikit-image
+matplotlib
+bm3d
+compressai
+torch_fidelity
+accelerate
+onnxruntime
