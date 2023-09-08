@@ -37,3 +37,5 @@ pip install -e .
 ```
 
 Then you can try the demo in `demo.ipynb`.
+
+This demo attacks [invisible-watermark](https://github.com/ShieldMnt/invisible-watermark) which is used in [stable diffusion](https://github.com/Stability-AI/stablediffusion).
