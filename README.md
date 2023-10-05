@@ -1,5 +1,7 @@
 # WatermarkAttacker
 
+### **Welcome to contribute to this project!**
+
 This repository contains the code for the paper [Invisible Image Watermarks Are Provably Removable Using Generative AI](https://arxiv.org/abs/2306.01953).
 
 We propose a family of **regeneration attacks** to remove invisible image watermarks. The attack method effectively removes invisible watermarks. 
