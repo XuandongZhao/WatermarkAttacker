@@ -45,11 +45,13 @@ This demo attacks [invisible-watermark](https://github.com/ShieldMnt/invisible-w
 ## How it works?
 
 In short, our method can be described using the following equation
+
 $$
 \begin{equation}
 \hat{x} =  \underbrace{\mathcal{A}\Big( \overbrace{\phi(x_w) + \mathcal{N}(0,\sigma^2 I_d)}^{\text{destructive}}\Big)}_{\text{constructive}},
 \end{equation}
 $$
+
 where $x_w$ is the watermarked image, $\phi$ is an embedding function, $\mathcal{N}$ is a Gaussian distribution that adds noise to the embedding, and $\mathcal{A}$ is a reconstruction algorithm that takes the noisy embedding of the image and tries to construct the original image.
 
 The embedding function $\phi$ and the reconstruction algorithm $\mathcal{A}$ can be instantiated with many algorithms.
@@ -61,11 +63,13 @@ The embedding function $\phi$ and the reconstruction algorithm $\mathcal{A}$ can
 The above figure shows the architecture of Stable Diffusion.
 
 The destructive process in our algorithm corresponds to adding noise to the image until a certain time step $t$. To do this, Stable Diffusion first maps the image from the pixel space to a latent space using its VAE encoder $\mathcal{E}$, and then adds noise to the latent space using a diffusion process, i.e.
+
 $$
 \begin{equation}
 z_t=\overbrace{\sqrt{\alpha(t)}\mathcal{E}(x_w)}^{\phi(x_w)}+\mathcal{N}(0,\overbrace{(1-\alpha(t))}^{\sigma^2}I_d),
 \end{equation}
 $$
+
 where $\alpha(t)$ is a function that controls the amount of noise added at time step $t$. By comparing equations (1) and (2), we can see that the embedding function $\phi$ is the scaled VAE encoder $\sqrt{\alpha(t)}\mathcal{E}$.
 
 After obtaining the noised representation $z_t$, we denoise it using Stable Diffusion to reconstruct the image, which corresponds to $\mathcal{A}$ in equation (1).
