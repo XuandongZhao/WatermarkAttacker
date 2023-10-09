@@ -44,7 +44,7 @@ This demo attacks [invisible-watermark](https://github.com/ShieldMnt/invisible-w
 
 ## How it works?
 
-In short, our method can be described using the following equation
+In short, our method can be described using the following **equation (1)**
 
 $$
 \begin{equation}
@@ -62,7 +62,7 @@ The embedding function $\phi$ and the reconstruction algorithm $\mathcal{A}$ can
 
 The above figure shows the architecture of Stable Diffusion.
 
-The destructive process in our algorithm corresponds to adding noise to the image until a certain time step $t$. To do this, Stable Diffusion first maps the image from the pixel space to a latent space using its VAE encoder $\mathcal{E}$, and then adds noise to the latent space using a diffusion process, i.e.
+The destructive process in our algorithm corresponds to adding noise to the image until a certain time step $t$. To do this, Stable Diffusion first maps the image from the pixel space to a latent space using its VAE encoder $\mathcal{E}$, and then adds noise to the latent space using a diffusion process, which is defined in the following **equation (2)**
 
 $$
 \begin{equation}
