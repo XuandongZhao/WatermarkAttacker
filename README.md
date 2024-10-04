@@ -36,6 +36,10 @@ pip install -r requirements.txt
 
 Then you can try the demo in `demo.ipynb`.
 
+For `Regen-Diffusion`, you can set the `DiffWMAttacker noise_step=30/60/100...` to control the noise level. The larger the `noise_step`, the more noise is added to the image, and the watermark is more likely to be removed.
+
+For `Regen-VAE`, you can set the `VAEWMAttacker quality=6/5/4/3/2/1` to control the noise level. The smaller the `quality`, the more noise is added to the image, and the watermark is more likely to be removed.
+
 This demo attacks [invisible-watermark](https://github.com/ShieldMnt/invisible-watermark) which is used in [stable diffusion](https://github.com/Stability-AI/stablediffusion).
 
 ## How it works?
