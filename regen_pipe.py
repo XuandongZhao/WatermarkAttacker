@@ -1,27 +1,9 @@
 import inspect
 from typing import Callable, List, Optional, Union
-
 import torch
-
-from diffusers.utils import is_accelerate_available
-from packaging import version
-from transformers import CLIPFeatureExtractor, CLIPTextModel, CLIPTokenizer
-
-from ...configuration_utils import FrozenDict
-from ...models import AutoencoderKL, UNet2DConditionModel
-from .pipeline_stable_diffusion import StableDiffusionPipeline
-from ...schedulers import (
-    DDIMScheduler,
-    DPMSolverMultistepScheduler,
-    EulerAncestralDiscreteScheduler,
-    EulerDiscreteScheduler,
-    LMSDiscreteScheduler,
-    PNDMScheduler,
-)
-from ...utils import deprecate, logging
-from . import StableDiffusionPipelineOutput
-from .safety_checker import StableDiffusionSafetyChecker
-
+from diffusers import StableDiffusionPipeline
+from diffusers.utils import deprecate, logging
+from diffusers.pipelines.stable_diffusion import StableDiffusionPipelineOutput
 
 logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 
@@ -29,25 +11,25 @@ logger = logging.get_logger(__name__)  # pylint: disable=invalid-name
 class ReSDPipeline(StableDiffusionPipeline):
     @torch.no_grad()
     def __call__(
-        self,
-        prompt: Union[str, List[str]],
-        prompt1_steps: Optional[int] = None,
-        prompt2: Optional[str] = None,
-        head_start_latents: Optional[Union[torch.FloatTensor, list]] = None,
-        head_start_step: Optional[int] = None,
-        height: Optional[int] = None,
-        width: Optional[int] = None,
-        num_inference_steps: int = 50,
-        guidance_scale: float = 7.5,
-        negative_prompt: Optional[Union[str, List[str]]] = None,
-        num_images_per_prompt: Optional[int] = 1,
-        eta: float = 0.0,
-        generator: Optional[torch.Generator] = None,
-        latents: Optional[torch.FloatTensor] = None,
-        output_type: Optional[str] = "pil",
-        return_dict: bool = True,
-        callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
-        callback_steps: Optional[int] = 1,
+            self,
+            prompt: Union[str, List[str]],
+            prompt1_steps: Optional[int] = None,
+            prompt2: Optional[str] = None,
+            head_start_latents: Optional[Union[torch.FloatTensor, list]] = None,
+            head_start_step: Optional[int] = None,
+            height: Optional[int] = None,
+            width: Optional[int] = None,
+            num_inference_steps: int = 50,
+            guidance_scale: float = 7.5,
+            negative_prompt: Optional[Union[str, List[str]]] = None,
+            num_images_per_prompt: Optional[int] = 1,
+            eta: float = 0.0,
+            generator: Optional[torch.Generator] = None,
+            latents: Optional[torch.FloatTensor] = None,
+            output_type: Optional[str] = "pil",
+            return_dict: bool = True,
+            callback: Optional[Callable[[int, int, torch.FloatTensor], None]] = None,
+            callback_steps: Optional[int] = 1,
     ):
         r"""
         Function invoked when calling the pipeline for generation.
@@ -103,7 +85,7 @@ class ReSDPipeline(StableDiffusionPipeline):
             list of `bool`s denoting whether the corresponding generated image likely represents "not-safe-for-work"
             (nsfw) content, according to the `safety_checker`.
         """
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # 0. Default height and width to unet
         height = height or self.unet.config.sample_size * self.vae_scale_factor
         width = width or self.unet.config.sample_size * self.vae_scale_factor
@@ -123,16 +105,16 @@ class ReSDPipeline(StableDiffusionPipeline):
         text_embeddings = self._encode_prompt(
             prompt, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
         )
-        
+
         if prompt2 is not None:
             text_embeddings2 = self._encode_prompt(
-            prompt2, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
-        )
+                prompt2, device, num_images_per_prompt, do_classifier_free_guidance, negative_prompt
+            )
 
         # 4. Prepare timesteps
         self.scheduler.set_timesteps(num_inference_steps, device=device)
         timesteps = self.scheduler.timesteps
-        #print(timesteps)
+        # print(timesteps)
 
         # 5. Prepare latent variables
         if head_start_latents is None:
@@ -151,9 +133,9 @@ class ReSDPipeline(StableDiffusionPipeline):
             if type(head_start_latents) == list:
                 latents = head_start_latents[-1]
                 assert len(head_start_latents) == self.scheduler.config.solver_order
-                
+
             else:
-                latents = head_start_latents # if there is a head start
+                latents = head_start_latents  # if there is a head start
         # 6. Prepare extra step kwargs. TODO: Logic should ideally just be moved out of the pipeline
         extra_step_kwargs = self.prepare_extra_step_kwargs(generator, eta)
 
@@ -161,18 +143,18 @@ class ReSDPipeline(StableDiffusionPipeline):
         num_warmup_steps = len(timesteps) - num_inference_steps * self.scheduler.order
         with self.progress_bar(total=num_inference_steps) as progress_bar:
             for i, t in enumerate(timesteps):
-                #print((i, t))
-                if not head_start_step or i >= head_start_step: # if there is no head start or we reached the hs step                
+                # print((i, t))
+                if not head_start_step or i >= head_start_step:  # if there is no head start or we reached the hs step
                     # expand the latents if we are doing classifier free guidance
-                    #print(latents.shape)
+                    # print(latents.shape)
                     latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
                     latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
-                    
+
                     # predict the noise residual
                     if prompt1_steps is None or i < prompt1_steps:
                         noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings).sample
                     else:
-                        #print(f'i = {i}, atteding to prompt2')
+                        # print(f'i = {i}, atteding to prompt2')
                         noise_pred = self.unet(latent_model_input, t, encoder_hidden_states=text_embeddings2).sample
 
                     # perform guidance

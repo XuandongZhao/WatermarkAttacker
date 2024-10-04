@@ -1,4 +1,5 @@
 transformers
+diffusers
 torch
 torchvision
 opencv-python

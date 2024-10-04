@@ -1,5 +1,7 @@
 # WatermarkAttacker
 
+[Update] The paper is accepted by NeurIPS 2024! 
+
 ### **Welcome to contribute to this project!**
 
 This repository contains the code for the paper [Invisible Image Watermarks Are Provably Removable Using Generative AI](https://arxiv.org/abs/2306.01953).
@@ -30,12 +32,6 @@ First, install the dependencies:
 
 ```bash
 pip install -r requirements.txt
-```
-
-Then, run the following command to install modified [diffusers](https://github.com/huggingface/diffusers)
-
-```bash
-pip install -e .
 ```
 
 Then you can try the demo in `demo.ipynb`.
