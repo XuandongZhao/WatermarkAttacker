@@ -9,11 +9,11 @@ This repository contains the code for the paper [Invisible Image Watermarks Are 
 If you find this repository useful, please cite our paper:
 
 ```
-@article{zhao2023invisible,
+@inproceedings{zhao2024invisible,
   title={Invisible Image Watermarks Are Provably Removable Using Generative AI},
   author={Zhao, Xuandong and Zhang, Kexun and Su, Zihao and Vasan, Saastha and Grishchenko, Ilya and Kruegel, Christopher and Vigna, Giovanni and Wang, Yu-Xiang and Li, Lei},
-  journal={arXiv preprint arXiv:2306.01953},
-  year={2023}
+  booktitle={Advances in Neural Information Processing Systems},
+  year={2024}
 }
 ```
 
